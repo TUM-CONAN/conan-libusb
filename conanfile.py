@@ -17,6 +17,12 @@ class LibusbConan(ConanFile):
     description = "A cross-platform library to access USB devices"
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
+    short_paths = True
+
+    def configure(self):
+        del self.settings.compiler.libcxx
+        if 'CI' not in os.environ:
+            os.environ["CONAN_SYSREQUIRES_MODE"] = "verify"
 
     def source(self):
         if tools.os_info.is_macos:
