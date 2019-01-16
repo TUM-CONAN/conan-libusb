@@ -10,6 +10,7 @@ class LibusbConan(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False]}
     default_options = "shared=True"
+    exports_sources = ["FindUSB.cmake"]
     exports = [
     ]
     url = "https://git.ircad.fr/conan/conan-libusb"
@@ -45,3 +46,4 @@ class LibusbConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
+        self.copy("FindUSB.cmake", ".", ".")
