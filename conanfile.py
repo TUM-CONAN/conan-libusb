@@ -44,6 +44,9 @@ class LibusbConan(ConanFile):
                 autotools.make()
                 autotools.install()
 
+    def package(self):
+        self.copy("FindUSB.cmake", ".", ".")
+
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-        self.copy("FindUSB.cmake", ".", ".")
+        
