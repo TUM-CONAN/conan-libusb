@@ -17,6 +17,7 @@ class LibusbConan(ConanFile):
     license="LGPL"
     description = "A cross-platform library to access USB devices"
     source_subfolder = "source_subfolder"
+    compat_source = "compat_source"
     build_subfolder = "build_subfolder"
     short_paths = True
 
@@ -29,6 +30,9 @@ class LibusbConan(ConanFile):
         if tools.os_info.is_macos:
             tools.get("https://github.com/libusb/libusb/archive/v{0}.zip".format(self.version))
             os.rename("libusb-{0}".format(self.version), self.source_subfolder)
+
+            tools.get("https://github.com/libusb/libusb-compat-0.1/archive/v0.1.7.tar.gz")
+            os.rename("libusb-compat-0.1-0.1.7", self.compat_source)
 
     def build(self):
         if tools.os_info.is_macos:
@@ -43,6 +47,19 @@ class LibusbConan(ConanFile):
                 autotools.configure()
                 autotools.make()
                 autotools.install()
+
+            compat_source_dir = os.path.join(self.source_folder, self.compat_source)
+
+            with tools.chdir(compat_source_dir):                
+                autotools = AutoToolsBuildEnvironment(self)
+                with tools.environment_append(autotools.vars):
+                    with tools.environment_append({"PKG_CONFIG_PATH": os.path.join(self.package_folder, 'lib', 'pkgconfig')}):
+                        self.run("chmod +x *.sh && ./autogen.sh")
+
+                        autotools.fpic = self.options.shared
+                        autotools.configure()
+                        autotools.make()
+                        autotools.install()
 
     def package(self):
         self.copy("FindUSB.cmake", ".", ".")
