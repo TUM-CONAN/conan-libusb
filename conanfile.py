@@ -5,7 +5,9 @@ import shutil
 
 class LibusbConan(ConanFile):
     name = "libusb"
-    version = "1.0.22"
+    package_revision = "-r1"
+    upstream_version = "1.0.22"
+    version = "{0}{1}".format(upstream_version, package_revision)
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False]}
@@ -31,8 +33,8 @@ class LibusbConan(ConanFile):
 
     def source(self):
         if tools.os_info.is_macos:
-            tools.get("https://github.com/libusb/libusb/archive/v{0}.zip".format(self.version))
-            os.rename("libusb-{0}".format(self.version), self.source_subfolder)
+            tools.get("https://github.com/libusb/libusb/archive/v{0}.zip".format(self.upstream_version))
+            os.rename("libusb-{0}".format(self.upstream_version), self.source_subfolder)
 
             tools.get("https://github.com/libusb/libusb-compat-0.1/archive/v0.1.7.tar.gz")
             os.rename("libusb-compat-0.1-0.1.7", self.compat_source)
