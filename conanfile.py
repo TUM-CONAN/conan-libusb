@@ -18,7 +18,7 @@ class LibusbConan(ConanFile):
     ]
     exports = [
     ]
-    url = "https://git.ircad.fr/conan/conan-libusb"
+    url = "https://github.com/ulricheck/conan-libusb"
     license="LGPL"
     description = "A cross-platform library to access USB devices"
     source_subfolder = "source_subfolder"
@@ -28,8 +28,8 @@ class LibusbConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
-        if 'CI' not in os.environ:
-            os.environ["CONAN_SYSREQUIRES_MODE"] = "verify"
+        # if 'CI' not in os.environ:
+        #     os.environ["CONAN_SYSREQUIRES_MODE"] = "verify"
 
     def source(self):
         if tools.os_info.is_macos:
